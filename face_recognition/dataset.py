@@ -3,9 +3,19 @@ import numpy as np
 import os
 import pickle
 
+# Ensure the data directory exists
+data_dir = './data/'
+if not os.path.exists(data_dir):
+    os.makedirs(data_dir)
+
+
+# Define the path to the Haar Cascade file
+cascade_path = './haarcascade_frontalface_default.xml'
+
+# Load the Haar Cascade file
 
 video = cv2.VideoCapture(0)
-face_detect = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
+face_detect = cv2.CascadeClassifier(cascade_path)
 
 face_data = []
 i=0
@@ -40,24 +50,27 @@ face_data = np.array(face_data)
 face_data = face_data.reshape(100, -1)
 
 
-if 'names.pkl' not in os.listdir('data/'):
-    names = [name]*100
-    with open('data/names.pkl', 'wb') as  f:
+# Check if 'names.pkl' exists and handle accordingly
+if 'names.pkl' not in os.listdir(data_dir):
+    names = [name] * 100
+    with open(os.path.join(data_dir, 'names.pkl'), 'wb') as f:
         pickle.dump(names, f)
 else:
-    with open('data/names.pkl', 'rb') as f:
+    with open(os.path.join(data_dir, 'names.pkl'), 'rb') as f:
         names = pickle.load(f)
-        names = names + [name]*100
+        names = names + [name] * 100
     
-    with open('data/names.pkl', 'wb') as f:
+    with open(os.path.join(data_dir, 'names.pkl'), 'wb') as f:
         pickle.dump(names, f)
 
-if 'face_data.pkl' not in os.listdir('data/'):
-    with open('data/face_data.pkl', 'wb') as f:
+# Check if 'face_data.pkl' exists and handle accordingly
+if 'face_data.pkl' not in os.listdir(data_dir):
+    with open(os.path.join(data_dir, 'face_data.pkl'), 'wb') as f:
         pickle.dump(face_data, f)
 else:
-    with open('data/face_data.pkl', 'rb') as f:
+    with open(os.path.join(data_dir, 'face_data.pkl'), 'rb') as f:
         faces = pickle.load(f)
-    faces = np.append(faces, face_data, axis=0)
-    with open('data/face_data.pkl', 'wb') as f:
-        pickle.dump(faces, f)
+        faces = np.concatenate((faces, face_data), axis=0)
+    
+    with open(os.path.join(data_dir, 'face_data.pkl'), 'wb') as f:
+        pickle.dump(faces, f) 

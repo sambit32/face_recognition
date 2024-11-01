@@ -1,7 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 import cv2
 import pickle
-import numpy as np
+# import numpy as np
 import os
 import csv
 import time
@@ -17,7 +17,7 @@ def speak(str1):
 video = cv2.VideoCapture(0)
 facedetect = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-with open('data/names.pkl', 'rb') as w:
+with open('./data/names.pkl', 'rb') as w:
     LABELS = pickle.load(w)
 with open('data/face_data.pkl', 'rb') as f:
     FACES = pickle.load(f)
